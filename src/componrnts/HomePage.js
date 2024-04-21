@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -85,8 +85,12 @@ export default function HomePage(props) {
       },
     ],
   };
+ 
 
-  const cards = BooksData.map((items) => (
+ 
+ 
+  const cards = (books) => {
+  return books.map((items) => (
     <div key={items.title}>
       <Card
         id={items.id}
@@ -101,7 +105,8 @@ export default function HomePage(props) {
       />
     </div>
   ));
-  const romanceBooks = BooksData.filter((book) => book.genre === "Romance");
+};
+  const romanceBooks = props.books.filter((book) => book.genre === "Romance");
   const cardsRomance = romanceBooks.map((items) => (
     <div key={items.title}>
       <Card
@@ -117,7 +122,7 @@ export default function HomePage(props) {
       />
     </div>
   ));
-  const fictionBooks = BooksData.filter((book) => book.genre === "Fiction");
+  const fictionBooks = props.books.filter((book) => book.genre === "Fiction");
   const cardsFiction = fictionBooks.map((items) => (
     <div key={items.title}>
       <Card
@@ -133,8 +138,9 @@ export default function HomePage(props) {
       />
     </div>
   ));
-  const dystopianBooks = BooksData.filter((book) => book.genre === "Dystopian");
+  const dystopianBooks = props.books.filter((book) => book.genre === "Dystopian");
   const cardsDystopian = dystopianBooks.map((items) => (
+
     <div key={items.title}>
       <Card
         id={items.id}
@@ -157,15 +163,13 @@ export default function HomePage(props) {
   }
   return (
     <div>
-      <Header 
-      totalQuantity={props.totalQuantity}
-      />
+      <Header totalQuantity={props.totalQuantity} />
       <Options action={scrollToH1} />
       <h1 style={{ color: "#252280", marginLeft: "30px", marginBottom: "0px" }}>
         POPULAR BOOKS
       </h1>
       <div className="slider-container">
-        <Slider {...settings}>{cards}</Slider>
+        <Slider {...settings}>{cards(props.books)}</Slider>
       </div>
       <h2
         id="Romance"

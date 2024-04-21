@@ -32,7 +32,7 @@ export default function CartPage(props) {
       <Header totalQuantity={props.totalQuantity} />
       <Options />
       {props.totalQuantity > 0 ? (
-        BooksData.map((product) => {
+        props.books.map((product) => {
           if (props.cartItems[product.id] !== 0) {
             return (
               <Cart
