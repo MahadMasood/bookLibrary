@@ -27,6 +27,19 @@ const imageMap = {
 };
 
 export default function CartPage(props) {
+  const imageUrls = props.download.map(item => `.${item.img}`);
+ 
+  console.log(imageUrls)
+  const handleDownload = () => {
+    imageUrls.forEach((imageUrl, index) => {
+      const link = document.createElement('a');
+      link.href = imageUrl;
+      link.download = `image${index + 1}.jpg`; // Set file names for downloaded images
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  };
   return (
     <div>
       <Header totalQuantity={props.totalQuantity} />
@@ -38,7 +51,7 @@ export default function CartPage(props) {
               <Cart
                 key={product.id}
                 id={product.id}
-                img={imageMap[product.image]}
+                img={imageMap[product.image]||product.image}
                 rating={product.stats.rating}
                 reviewCount={product.stats.reviewCount}
                 sale={product.sale}
@@ -58,6 +71,9 @@ export default function CartPage(props) {
           <h1>Empty Cart</h1>
         </div>
       )}
+      <div style={{display:'flex',justifyContent:'center',alignItems:'center',marginTop:'5px',marginBottom:'100px'}}>
+        <button onClick={handleDownload} className="card-button-2">Checkout</button>
+      </div>
     </div>
   );
 }

@@ -26,7 +26,7 @@ export default function Card(props) {
       <button className="card-button-1" onClick={() => props.add(props.id)}>
         Add to Cart
       </button>
-      <button className="card-button-2">Copy URL</button>
+     
     </div>
   );
 }

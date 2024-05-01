@@ -34,7 +34,7 @@ export default function Cart(props) {
               className="card-button-2"
               onClick={() => props.remove(props.id)}
             >
-              &larr;
+              -
             </button>
             <p
               style={{
@@ -51,7 +51,7 @@ export default function Cart(props) {
               className="card-button-2"
               onClick={() => props.add(props.id)}
             >
-              &rarr;
+              +
             </button>
           </div>
         </div>

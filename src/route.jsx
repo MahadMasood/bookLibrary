@@ -2,26 +2,12 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./componrnts/HomePage";
 import LoginPage from "./componrnts/LoginPage";
-import CartPage from "./componrnts/CartPage"
+import CartPage from "./componrnts/CartPage";
 import BooksData from "./BooksData";
 function ROUTE() {
-  const getDefaultCart = () => {
-    let cart = {};
-    for (let i = 1; i < BooksData.length + 1; i++) {
-      cart[i] = 0;
-    }
-    return cart;
-  };
-  const [cartItems, setCartItems] = React.useState(getDefaultCart());
-  function addToCart(itemId) {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-  }
-  function removeFromCart(itemId) {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-  }
   const [books, setBooks] = React.useState([]);
   const [totalCount, setTotalCount] = React.useState(0);
-
+  const [downloadbook, setDownloadbook] = useState([]);
   React.useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -38,6 +24,32 @@ function ROUTE() {
 
     fetchBooks();
   }, []);
+  console.log(books);
+  const getDefaultCart = () => {
+    let cart = {};
+    for (let i = 1; i < 100; i++) {
+      cart[i] = 0;
+    }
+    return cart;
+  };
+  const [cartItems, setCartItems] = React.useState(getDefaultCart());
+  function addToCart(itemId) {
+    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
+    const newId = books.findIndex((book) => book.id === itemId);
+    setDownloadbook((prev) => [
+      ...prev,
+      { id: itemId, img: books[newId].image },
+    ]);
+  }
+  function removeFromCart(itemId) {
+    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
+    for(let i=0;i<downloadbook.length;i++){
+      if(downloadbook[i].id==itemId){
+        setDownloadbook((prev)=>prev.splice(i,1))
+      }
+    }
+  }
+  console.log(downloadbook);
 
   const fetchBooks = async () => {
     try {
@@ -48,7 +60,7 @@ function ROUTE() {
       console.error("Error fetching books:", error);
     }
   };
-
+  
   React.useEffect(() => {
     let count = 0;
     for (const itemId in cartItems) {
@@ -64,7 +76,11 @@ function ROUTE() {
           <Route
             path=""
             element={
-              <HomePage addToCart={addToCart} totalQuantity={totalCount} books={books} />
+              <HomePage
+                addToCart={addToCart}
+                totalQuantity={totalCount}
+                books={books}
+              />
             }
           />
           <Route
@@ -80,6 +96,7 @@ function ROUTE() {
                 addToCart={addToCart}
                 removeFromCart={removeFromCart}
                 totalQuantity={totalCount}
+                download={downloadbook}
               />
             }
           />

@@ -94,7 +94,7 @@ export default function HomePage(props) {
     <div key={items.title}>
       <Card
         id={items.id}
-        img={imageMap[items.image]}
+        img={imageMap[items.image]||items.image}
         rating={items.stats.rating}
         reviewCount={items.stats.reviewCount}
         sale={items.sale}
@@ -111,7 +111,7 @@ export default function HomePage(props) {
     <div key={items.title}>
       <Card
         id={items.id}
-        img={imageMap[items.image]}
+        img={imageMap[items.image]||items.image}
         rating={items.stats.rating}
         reviewCount={items.stats.reviewCount}
         sale={items.sale}
@@ -127,7 +127,7 @@ export default function HomePage(props) {
     <div key={items.title}>
       <Card
         id={items.id}
-        img={imageMap[items.image]}
+        img={imageMap[items.image]||items.image}
         rating={items.stats.rating}
         reviewCount={items.stats.reviewCount}
         sale={items.sale}
@@ -144,7 +144,7 @@ export default function HomePage(props) {
     <div key={items.title}>
       <Card
         id={items.id}
-        img={imageMap[items.image]}
+        img={imageMap[items.image]||items.image}
         rating={items.stats.rating}
         reviewCount={items.stats.reviewCount}
         sale={items.sale}

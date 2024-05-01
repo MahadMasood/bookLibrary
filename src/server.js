@@ -4,21 +4,21 @@ const cors = require("cors");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-
-// MongoDB connection URI
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 const uri =
   "mongodb+srv://mahadmasood85:k2rtPf5AwKWlOsjq@cluster0.ltszv42.mongodb.net/bookLibrary?retryWrites=true&w=majority";
 
-// Define Mongoose connection options
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
 
-// Use CORS middleware with specific origin
-app.use(cors({
-  origin: "http://localhost:3000", // Replace this with your frontend URL
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -29,7 +29,6 @@ mongoose
   .then(() => {
     console.log("MongoDB connected");
 
-    // Define schema for Book model
     const bookSchema = new mongoose.Schema({
       title: String,
       author: String,
@@ -44,23 +43,18 @@ mongoose
       sale: Number,
     });
 
-    // Define Book model
     const Book = mongoose.model("Book", bookSchema, "bookData");
 
-    // Define schema for User model
     const userSchema = new mongoose.Schema({
       username: String,
-      email: String,
-      password: String
+      Email: String,
+      password: String,
     });
 
-    // Define User model
-    const User = mongoose.model('User', userSchema,"Users");
+    const User = mongoose.model("Users", userSchema, "Users");
 
-    // Define route to fetch book data
     app.get("/api/books", async (req, res) => {
       try {
-        // Fetch all books from database
         const books = await Book.find();
         res.json(books);
       } catch (err) {
@@ -69,29 +63,62 @@ mongoose
       }
     });
 
-    // API endpoint to handle user registration
-    app.post('/api/register', (req, res) => {
-      const { username, email, password } = req.body;
-      
-      // Create a new user document
-      const newUser = new User({
-        username,
-        email,
-        password
-      });
-
-      // Save the user document to the database
-      newUser.save((err, user) => {
-        if (err) {
-          console.error(err);
-          res.status(500).send('Error saving user');
-        } else {
-          res.status(201).send('User registered successfully');
-        }
-      });
+    app.get("/api/users", async (req, res) => {
+      try {
+        const users = await User.find();
+        res.json(users);
+      } catch (err) {
+        console.error("Error fetching users:", err);
+        res.status(500).json({ error: "Internal server error" });
+      }
     });
 
-    // Define route handler for the root path
+    app.post("/api/register", async (req, res) => {
+      const { username, Email, password } = req.body;
+
+      try {
+        // Create a new user document
+        const newUser = new User({
+          username,
+          Email,
+          password,
+        });
+
+        const savedUser = await newUser.save();
+        console.log("User saved successfully:", savedUser);
+        res.status(201).send("User registered successfully");
+      } catch (err) {
+        console.error("Error saving user:", err);
+        res.status(500).send("Error saving user");
+      }
+    });
+
+    app.post("/api/addBook", async (req, res) => {
+      const { title, author, genre, year, image, stats, price, sale } =
+        req.body;
+
+      try {
+        // Create a new book document
+        const newBook = new Book({
+          title,
+          author,
+          genre,
+          year,
+          image,
+          stats,
+          price,
+          sale,
+        });
+
+        const savedBook = await newBook.save();
+        console.log("Book saved successfully:", savedBook);
+        res.status(201).send("Book added successfully");
+      } catch (err) {
+        console.error("Error adding book:", err);
+        res.status(500).send("Error adding book");
+      }
+    });
+
     app.get("/", (req, res) => {
       res.send("Server is running");
     });
